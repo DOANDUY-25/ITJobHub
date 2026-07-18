@@ -1,4 +1,4 @@
-package itjobhub.service.iplm;
+package itjobhub.service;
 
 import itjobhub.entity.User;
 import itjobhub.exception.AuthException;

@@ -1,13 +1,10 @@
-package itjobhub.dto;
+package itjobhub.dto.auth;
 
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class ForgotPasswordRequest {
     @NotBlank @Email
     private String email;
-
-    @NotBlank
-    private String password;
 }

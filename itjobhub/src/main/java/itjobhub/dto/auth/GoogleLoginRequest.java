@@ -1,4 +1,4 @@
-package itjobhub.dto;
+package itjobhub.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
