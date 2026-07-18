@@ -1,6 +1,6 @@
 package itjobhub.controller;
 
-import itjobhub.dto.*;
+import itjobhub.dto.auth.*;
 import itjobhub.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

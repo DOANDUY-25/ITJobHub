@@ -1,15 +1,13 @@
 package itjobhub.service;
 
-import itjobhub.dto.*;
-import itjobhub.entity.AccountStatus;
-import itjobhub.entity.AuthProvider;
-import itjobhub.entity.Role;
-import itjobhub.entity.User;
+import itjobhub.dto.auth.*;
+import itjobhub.entity.*;
 import itjobhub.exception.AuthException;
+import itjobhub.repository.CandidateRepository;
+import itjobhub.repository.CompanyRepository;
 import itjobhub.repository.UserRepository;
 import itjobhub.security.JwtService;
 import itjobhub.service.iplm.GoogleTokenVerifierService;
-import itjobhub.service.iplm.OtpService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final CandidateRepository candidateRepository;
+    private final CompanyRepository companyRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final OtpService otpService;
@@ -167,13 +167,22 @@ public class AuthService {
         String accessToken = jwtService.generateAccessToken(user.getUserId(), user.getEmail(), user.getRole().name());
         String refreshToken = jwtService.generateRefreshToken(user.getUserId(), user.getEmail(), user.getRole().name());
 
+        String fullName = null;
+        if (user.getRole() == Role.CANDIDATE) {
+            Candidate candidate = candidateRepository.findByCandidateId(user.getUserId()).orElse(null);
+            if (candidate != null) fullName = candidate.getFullName();
+        } else if (user.getRole() == Role.EMPLOYER) {
+            Company company = companyRepository.findByCompanyId(user.getUserId()).orElse(null);
+            if (company != null) fullName = company.getCompanyName();
+        }
+
         return AuthResponse.builder()
                 .accessToken(accessToken)
                 .refreshToken(refreshToken)
                 .tokenType("Bearer")
                 .userId(user.getUserId())
                 .email(user.getEmail())
-                .fullName(null) // se lay tu bang candidates/employers khi join profile
+                .fullName(fullName)
                 .role(user.getRole().name())
                 .build();
     }
