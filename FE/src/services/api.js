@@ -62,4 +62,17 @@ export const profileService = {
   changePassword: async (data) => (await authApi.put('/change-password', data)).data,
 };
 
+// ===================== Job Service =====================
+export const jobService = {
+  getPublishedJobs: async () => (await api.get('/jobs')).data,
+  searchJobs: async (query, location, jobType) => {
+    const params = {};
+    if (query) params.query = query;
+    if (location && location !== 'All Locations') params.location = location;
+    if (jobType && jobType !== 'All Types') params.jobType = jobType;
+    return (await api.get('/jobs/search', { params })).data;
+  },
+  getJobDetails: async (id) => (await api.get(`/jobs/${id}`)).data,
+};
+
 export default api;

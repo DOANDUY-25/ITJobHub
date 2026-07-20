@@ -1,127 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import JobFilters from '../components/JobFilters';
 import JobCard from '../components/JobCard';
 import ApplyModal from '../components/ApplyModal';
-import { Sparkles, Calendar, DollarSign, MapPin, Award, CheckCircle, ArrowRight } from 'lucide-react';
-
-const MOCK_JOBS = [
-  {
-    id: 1,
-    title: 'Senior Frontend Architect (React)',
-    company: 'Vortex Labs',
-    location: 'Remote',
-    type: 'Full-time',
-    experience: 'Senior',
-    salary: '$3,500 - $5,000',
-    skills: ['React', 'TypeScript', 'Next.js', 'Web3'],
-    postedDate: '2 hours ago',
-    logoColor: 'linear-gradient(135deg, #a78bfa, #7c3aed)',
-    description: 'We are seeking a Frontend Architect to spearhead our next-generation SaaS product. You will design core rendering architectures, establish design systems, and lead a stellar team of React developers.',
-    requirements: [
-      '5+ years of software development experience specializing in React.',
-      'Proficiency in TypeScript, build tools (Vite, Webpack), and modern state management.',
-      'Experience optimizing Core Web Vitals and SEO optimization.',
-      'Excellent leadership and architecture design skills.'
-    ]
-  },
-  {
-    id: 2,
-    title: 'Backend Engineer (Spring Boot & Cloud)',
-    company: 'Nexus Financials',
-    location: 'Ha Noi',
-    type: 'Full-time',
-    experience: 'Mid-level',
-    salary: '25,000,000 - 35,000,000 VND',
-    skills: ['Java', 'Spring Boot', 'MySQL', 'Docker', 'Redis'],
-    postedDate: '1 day ago',
-    logoColor: 'linear-gradient(135deg, #34d399, #059669)',
-    description: 'Join our backend banking system scaling team. You will create secure, performant REST APIs, manage database scaling (MySQL), and configure microservice communication in Kubernetes.',
-    requirements: [
-      '3+ years of experience with Java and Spring Framework (Boot, Security, Data).',
-      'Solid understanding of database systems (SQL queries optimization, indexing).',
-      'Familiarity with containerization (Docker, Kubernetes) and caching (Redis).',
-      'Experience building auth schemas and integrating OAuth2.'
-    ]
-  },
-  {
-    id: 3,
-    title: 'AI & Data Science Specialist',
-    company: 'Cerebrum Systems',
-    location: 'Ho Chi Minh',
-    type: 'Full-time',
-    experience: 'Senior',
-    salary: '$4,000 - $6,000',
-    skills: ['Python', 'PyTorch', 'FastAPI', 'MLOps'],
-    postedDate: '3 days ago',
-    logoColor: 'linear-gradient(135deg, #60a5fa, #2563eb)',
-    description: 'Create and deploy intelligence. Work directly with our data engines to implement custom LLM integrations, train computer vision pipelines, and package endpoints using FastAPI.',
-    requirements: [
-      'Strong Python foundations and machine learning frameworks (PyTorch, TensorFlow).',
-      'Experience deployment models on cloud architectures (AWS, GCP).',
-      'Solid command of linear algebra, calculus, and statistics.',
-      'PhD or MS in Computer Science, Math, or related field is a plus.'
-    ]
-  },
-  {
-    id: 4,
-    title: 'DevOps & Infrastructure Engineer',
-    company: 'Skyward Inc.',
-    location: 'Da Nang',
-    type: 'Contract',
-    experience: 'Senior',
-    salary: '$2,800 - $4,200',
-    skills: ['AWS', 'Terraform', 'CI/CD', 'Kubernetes'],
-    postedDate: '4 days ago',
-    logoColor: 'linear-gradient(135deg, #f472b6, #db2777)',
-    description: 'Automate all things! We need a seasoned DevOps professional to maintain our AWS infrastructure via Terraform, establish robust GitHub Action workflows, and manage multi-stage Kubernetes pipelines.',
-    requirements: [
-      '4+ years working in Cloud Infrastructures (AWS preferred).',
-      'Strong expertise writing Infrastructure as Code using Terraform.',
-      'Solid Shell scripting (Bash/Python) and Linux system administration.',
-      'Proficiency setting up monitoring suites (Prometheus, Grafana, ELK).'
-    ]
-  },
-  {
-    id: 5,
-    title: 'React Native Developer',
-    company: 'MobyApps',
-    location: 'Ho Chi Minh',
-    type: 'Full-time',
-    experience: 'Mid-level',
-    salary: '20,000,000 - 30,000,000 VND',
-    skills: ['React Native', 'JavaScript', 'Redux', 'iOS/Android'],
-    postedDate: '5 days ago',
-    logoColor: 'linear-gradient(135deg, #fb7185, #e11d48)',
-    description: 'We are seeking a React Native Developer to maintain and introduce new feature updates for our core iOS and Android e-commerce mobile applications.',
-    requirements: [
-      '2+ years developing mobile apps with React Native.',
-      'Familiarity with native modules bridge configurations.',
-      'Proven experience releasing apps to Apple App Store or Google Play Store.',
-      'Understanding of offline storage, state management, and push notification services.'
-    ]
-  },
-  {
-    id: 6,
-    title: 'Internship Software Engineer (Java/Web)',
-    company: 'ITJobHub Academy',
-    location: 'Ha Noi',
-    type: 'Internship',
-    experience: 'Junior',
-    salary: 'Negotiable',
-    skills: ['Java', 'SQL', 'HTML/CSS', 'Git'],
-    postedDate: '1 week ago',
-    logoColor: 'linear-gradient(135deg, #fbbf24, #d97706)',
-    description: 'Learn from senior engineers. As an intern, you will undergo structured training, assist in bug fixes, write automated tests, and gain hands-on experience building full-stack web architectures.',
-    requirements: [
-      'Final year student or self-taught developer in Computer Science.',
-      'Basic knowledge of object-oriented programming (OOP) in Java.',
-      'Familiarity with git workflow and SQL database engines.',
-      'Eager to learn, proactive, and positive attitude.'
-    ]
-  }
-];
+import { Sparkles, Calendar, DollarSign, MapPin, Award, CheckCircle, ArrowRight, RefreshCw } from 'lucide-react';
+import { jobService } from '../services/api';
 
 function Home({ addAppliedJob, showToast }) {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     query: '',
     location: 'All Locations',
@@ -130,6 +16,22 @@ function Home({ addAppliedJob, showToast }) {
   });
   const [selectedJob, setSelectedJob] = useState(null);
   const [applyingJob, setApplyingJob] = useState(null);
+
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        setLoading(true);
+        const data = await jobService.getPublishedJobs();
+        setJobs(data);
+      } catch (err) {
+        showToast('Failed to load jobs from backend server.', 'error');
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadJobs();
+  }, []);
 
   const handleFilterChange = (newFilters) => {
     setFilters(newFilters);
@@ -144,14 +46,25 @@ function Home({ addAppliedJob, showToast }) {
     });
   };
 
-  const filteredJobs = MOCK_JOBS.filter((job) => {
+  const handleViewDetails = async (job) => {
+    try {
+      const details = await jobService.getJobDetails(job.id);
+      setSelectedJob(details);
+    } catch (err) {
+      showToast('Failed to fetch job details from server.', 'error');
+      console.error(err);
+    }
+  };
+
+  const filteredJobs = jobs.filter((job) => {
     const matchesQuery =
       job.title.toLowerCase().includes(filters.query.toLowerCase()) ||
       job.company.toLowerCase().includes(filters.query.toLowerCase()) ||
       job.skills.some((s) => s.toLowerCase().includes(filters.query.toLowerCase()));
 
     const matchesLocation =
-      filters.location === 'All Locations' || job.location === filters.location;
+      filters.location === 'All Locations' || 
+      job.location.toLowerCase().includes(filters.location.toLowerCase());
 
     const matchesType = filters.type === 'All Types' || job.type === filters.type;
 
@@ -282,7 +195,12 @@ function Home({ addAppliedJob, showToast }) {
         </div>
 
         {/* Listings Grid */}
-        {filteredJobs.length > 0 ? (
+        {loading ? (
+          <div className="glass-card" style={{ padding: '4rem 2rem', textAlign: 'center', borderRadius: '16px' }}>
+            <RefreshCw size={36} className="animate-spin" style={{ color: 'var(--primary)', margin: '0 auto 1rem auto' }} />
+            <p style={{ color: 'var(--text-secondary)' }}>Loading job postings from server...</p>
+          </div>
+        ) : filteredJobs.length > 0 ? (
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
@@ -292,7 +210,7 @@ function Home({ addAppliedJob, showToast }) {
               <JobCard
                 key={job.id}
                 job={job}
-                onViewDetails={setSelectedJob}
+                onViewDetails={handleViewDetails}
                 onApply={setApplyingJob}
               />
             ))}

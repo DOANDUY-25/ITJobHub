@@ -45,6 +45,8 @@ public class SecurityConfig {
                 .requestMatchers("/v1/auth/register", "/v1/auth/verify-otp", "/v1/auth/resend-otp",
                         "/v1/auth/login", "/v1/auth/login/google",
                         "/v1/auth/forgot-password", "/v1/auth/reset-password").permitAll()
+                // Public jobs endpoints (Guest search and details)
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/v1/jobs/**").permitAll()
                 // Swagger
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // Everything else requires a valid JWT

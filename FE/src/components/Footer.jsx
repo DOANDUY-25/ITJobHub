@@ -25,7 +25,7 @@ const LinkedinIcon = ({ size = 18 }) => (
 function Footer() {
   return (
     <footer style={{
-      background: 'rgba(8, 9, 13, 0.95)',
+      background: 'var(--bg-dark-sec)',
       borderTop: '1px solid var(--border-muted)',
       padding: '3rem 1.5rem 2rem 1.5rem',
       marginTop: 'auto',

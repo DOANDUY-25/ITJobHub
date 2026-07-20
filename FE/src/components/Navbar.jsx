@@ -19,7 +19,7 @@ function Navbar({ user, onLogout }) {
       position: 'sticky',
       top: 0,
       zIndex: 900,
-      background: 'rgba(8, 9, 13, 0.8)',
+      background: 'rgba(255, 255, 255, 0.85)',
       backdropFilter: 'blur(12px)',
       borderBottom: '1px solid var(--border-muted)',
       width: '100%'
@@ -156,7 +156,7 @@ function Navbar({ user, onLogout }) {
           top: '70px',
           left: 0,
           right: 0,
-          boxShadow: '0 10px 15px rgba(0,0,0,0.5)',
+          boxShadow: '0 10px 15px rgba(0,0,0,0.05)',
           zIndex: 899
         }}>
           <Link to="/" onClick={() => setIsOpen(false)} style={{

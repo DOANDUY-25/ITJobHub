@@ -1,32 +1,32 @@
 :root {
-  /* Obsidian Dark Colors */
-  --bg-dark: #08090d;
-  --bg-dark-sec: #0e111a;
-  --bg-card: rgba(17, 21, 32, 0.7);
-  --bg-card-hover: rgba(26, 31, 46, 0.8);
-  --border-glow: rgba(139, 92, 246, 0.15);
-  --border-muted: rgba(255, 255, 255, 0.06);
-  --border-hover: rgba(139, 92, 246, 0.4);
+  /* Sleek Light Colors */
+  --bg-dark: #f8fafc;
+  --bg-dark-sec: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.7);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --border-glow: rgba(139, 92, 246, 0.1);
+  --border-muted: rgba(226, 232, 240, 0.8);
+  --border-hover: rgba(139, 92, 246, 0.3);
 
-  /* Primary Accent: Electric Violet */
-  --primary: #8b5cf6;
-  --primary-hover: #7c3aed;
-  --primary-glow: rgba(139, 92, 246, 0.3);
+  /* Primary Accent: Premium Violet */
+  --primary: #7c3aed;
+  --primary-hover: #6d28d9;
+  --primary-glow: rgba(124, 58, 237, 0.15);
 
   /* Secondary Accent: Tech Cyan */
-  --secondary: #06b6d4;
-  --secondary-hover: #0891b2;
-  --secondary-glow: rgba(6, 182, 212, 0.3);
+  --secondary: #0891b2;
+  --secondary-hover: #0e7490;
+  --secondary-glow: rgba(8, 145, 178, 0.15);
 
   /* Functional Colors */
-  --success: #10b981;
-  --warning: #f59e0b;
-  --error: #ef4444;
-  --info: #3b82f6;
+  --success: #059669;
+  --warning: #d97706;
+  --error: #dc2626;
+  --info: #2563eb;
 
   /* Text Colors */
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
   --text-muted: #64748b;
 
   /* Fonts */
@@ -104,12 +104,12 @@ h3 {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #334155;
+  background: #94a3b8;
 }
 
 /* Button Component Styles */
@@ -189,7 +189,7 @@ h3 {
 .form-input {
   width: 100%;
   padding: 0.75rem 1rem;
-  background-color: rgba(15, 17, 26, 0.8);
+  background-color: #ffffff;
   border: 1px solid var(--border-muted);
   border-radius: 8px;
   color: var(--text-primary);
@@ -243,27 +243,27 @@ h3 {
 }
 
 .badge-primary {
-  background: rgba(139, 92, 246, 0.15);
-  color: #a78bfa;
-  border: 1px solid rgba(139, 92, 246, 0.25);
+  background: rgba(139, 92, 246, 0.1);
+  color: #6d28d9;
+  border: 1px solid rgba(139, 92, 246, 0.2);
 }
 
 .badge-cyan {
-  background: rgba(6, 182, 212, 0.15);
-  color: #22d3ee;
-  border: 1px solid rgba(6, 182, 212, 0.25);
+  background: rgba(6, 182, 212, 0.1);
+  color: #0891b2;
+  border: 1px solid rgba(6, 182, 212, 0.2);
 }
 
 .badge-success {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.1);
+  color: #059669;
+  border: 1px solid rgba(16, 185, 129, 0.2);
 }
 
 .badge-warning {
-  background: rgba(245, 158, 11, 0.15);
-  color: #fbbf24;
-  border: 1px solid rgba(245, 158, 11, 0.25);
+  background: rgba(245, 158, 11, 0.1);
+  color: #d97706;
+  border: 1px solid rgba(245, 158, 11, 0.2);
 }
 
 /* Modal Overlay & Container */
@@ -273,7 +273,7 @@ h3 {
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(3, 4, 6, 0.85);
+  background-color: rgba(15, 23, 42, 0.3);
   backdrop-filter: blur(8px);
   display: flex;
   align-items: center;
@@ -285,13 +285,13 @@ h3 {
 
 .modal-content {
   background-color: var(--bg-dark-sec);
-  border: 1px solid var(--border-hover);
+  border: 1px solid var(--border-muted);
   border-radius: 20px;
   max-width: 550px;
   width: 100%;
   padding: 2.25rem;
   position: relative;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7), 0 0 30px var(--border-glow);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
   animation: slideUp var(--transition-normal) cubic-bezier(0.34, 1.56, 0.64, 1);
   overflow-y: auto;
   max-height: 90vh;
@@ -347,10 +347,10 @@ h3 {
   gap: 0.75rem;
   padding: 1rem 1.25rem;
   border-radius: 8px;
-  background-color: #12131a;
+  background-color: #ffffff;
   border: 1px solid var(--border-muted);
   color: var(--text-primary);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   animation: slideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 }
 
