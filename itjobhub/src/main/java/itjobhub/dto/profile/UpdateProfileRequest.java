@@ -26,8 +26,14 @@ public class UpdateProfileRequest {
     // Company fields
     private String companyName;
     private String logoUrl;
+    private String bannerUrl;
     private String location;
+    private String address;
+    private String companyPhone;
+    private String website;
+    private String taxCode;
     private String industry;
     private String size;
     private String description;
+    private String culture;
 }

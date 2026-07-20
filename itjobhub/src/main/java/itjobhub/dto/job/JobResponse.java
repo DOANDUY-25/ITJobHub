@@ -19,6 +19,7 @@ import java.util.stream.Collectors;
 @Builder
 public class JobResponse {
     private Long id;
+    private Long companyId;
     private String title;
     private String company;
     private String logoUrl;
@@ -29,10 +30,12 @@ public class JobResponse {
     private String salary;
     private List<String> skills;
     private String postedDate;
+    private String expiryDate;
     private String description;
     private List<String> requirements;
     private Boolean isFeatured;
     private Boolean isUrgent;
+    private String status;
 
     public static JobResponse fromEntity(Job job) {
         if (job == null) return null;
@@ -102,8 +105,14 @@ public class JobResponse {
             exp = "Junior";
         }
 
+        String expiryDateStr = null;
+        if (job.getExpiryDate() != null) {
+            expiryDateStr = job.getExpiryDate().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        }
+
         return JobResponse.builder()
                 .id(job.getJobId())
+                .companyId(job.getCompany() != null ? job.getCompany().getCompanyId() : null)
                 .title(job.getTitle())
                 .company(compName)
                 .logoUrl(job.getCompany() != null ? job.getCompany().getLogoUrl() : null)
@@ -114,10 +123,12 @@ public class JobResponse {
                 .salary(salaryStr)
                 .skills(parsedSkills)
                 .postedDate(formattedDate)
+                .expiryDate(expiryDateStr)
                 .description(job.getDescription())
                 .requirements(reqs)
                 .isFeatured(job.getIsFeatured())
                 .isUrgent(job.getIsUrgent())
+                .status(job.getStatus() != null ? job.getStatus().name() : null)
                 .build();
     }
 

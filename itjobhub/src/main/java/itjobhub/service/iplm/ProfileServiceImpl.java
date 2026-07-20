@@ -56,11 +56,17 @@ public class ProfileServiceImpl implements ProfileService {
                         .companyId(company.getCompanyId())
                         .companyName(company.getCompanyName())
                         .logoUrl(company.getLogoUrl())
+                        .bannerUrl(company.getBannerUrl())
                         .location(company.getLocation())
+                        .address(company.getAddress())
+                        .phone(company.getPhone())
+                        .website(company.getWebsite())
+                        .taxCode(company.getTaxCode())
                         .profileStatus(company.getProfileStatus() != null ? company.getProfileStatus().name() : null)
                         .industry(company.getIndustry())
                         .size(company.getSize())
                         .description(company.getDescription())
+                        .culture(company.getCulture())
                         .build();
             }
         }
@@ -120,10 +126,16 @@ public class ProfileServiceImpl implements ProfileService {
             }
             if (request.getCompanyName() != null) company.setCompanyName(request.getCompanyName());
             if (request.getLogoUrl() != null) company.setLogoUrl(request.getLogoUrl());
+            if (request.getBannerUrl() != null) company.setBannerUrl(request.getBannerUrl());
             if (request.getLocation() != null) company.setLocation(request.getLocation());
+            if (request.getAddress() != null) company.setAddress(request.getAddress());
+            if (request.getCompanyPhone() != null) company.setPhone(request.getCompanyPhone());
+            if (request.getWebsite() != null) company.setWebsite(request.getWebsite());
+            if (request.getTaxCode() != null) company.setTaxCode(request.getTaxCode());
             if (request.getIndustry() != null) company.setIndustry(request.getIndustry());
             if (request.getSize() != null) company.setSize(request.getSize());
             if (request.getDescription() != null) company.setDescription(request.getDescription());
+            if (request.getCulture() != null) company.setCulture(request.getCulture());
             companyRepository.save(company);
         }
 

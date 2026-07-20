@@ -1,6 +1,5 @@
 package itjobhub.entity;
 
-
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
@@ -29,8 +28,23 @@ public class Company {
     @Column(name = "logo_url", length = 500)
     private String logoUrl;
 
+    @Column(name = "banner_url", length = 500)
+    private String bannerUrl;
+
     @Column(length = 200)
     private String location;
+
+    @Column(length = 300)
+    private String address;
+
+    @Column(length = 100)
+    private String phone;
+
+    @Column(length = 300)
+    private String website;
+
+    @Column(name = "tax_code", length = 50)
+    private String taxCode;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "profile_status", nullable = false)
@@ -44,6 +58,9 @@ public class Company {
 
     @Column(columnDefinition = "TEXT")
     private String description;
+
+    @Column(columnDefinition = "TEXT")
+    private String culture;
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;

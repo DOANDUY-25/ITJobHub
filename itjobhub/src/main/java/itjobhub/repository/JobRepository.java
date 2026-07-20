@@ -36,4 +36,7 @@ public interface JobRepository extends JpaRepository<Job, Long> {
             @Param("location") String location,
             @Param("jobType") JobType jobType
     );
+
+    @Query("SELECT j FROM Job j JOIN FETCH j.company c WHERE c.companyId = :companyId ORDER BY j.createdAt DESC")
+    List<Job> findByCompanyId(@Param("companyId") Long companyId);
 }

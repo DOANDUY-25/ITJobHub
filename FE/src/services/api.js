@@ -73,6 +73,13 @@ export const jobService = {
     return (await api.get('/jobs/search', { params })).data;
   },
   getJobDetails: async (id) => (await api.get(`/jobs/${id}`)).data,
+
+  // Employer CRUD
+  getMyJobs: async () => (await api.get('/jobs/my')).data,
+  createJob: async (data) => (await api.post('/jobs', data)).data,
+  updateJob: async (id, data) => (await api.put(`/jobs/${id}`, data)).data,
+  deleteJob: async (id) => (await api.delete(`/jobs/${id}`)).data,
+  changeJobStatus: async (id, status) => (await api.patch(`/jobs/${id}/status`, { status })).data,
 };
 
 // ===================== Application Service =====================
