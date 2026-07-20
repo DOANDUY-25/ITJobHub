@@ -47,6 +47,8 @@ public class SecurityConfig {
                         "/v1/auth/forgot-password", "/v1/auth/reset-password").permitAll()
                 // Public jobs endpoints (Guest search and details)
                 .requestMatchers(org.springframework.http.HttpMethod.GET, "/v1/jobs/**").permitAll()
+                // Public CV downloads
+                .requestMatchers(org.springframework.http.HttpMethod.GET, "/v1/applications/cv/**").permitAll()
                 // Swagger
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                 // Everything else requires a valid JWT

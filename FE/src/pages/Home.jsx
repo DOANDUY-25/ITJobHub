@@ -5,7 +5,7 @@ import ApplyModal from '../components/ApplyModal';
 import { Sparkles, Calendar, DollarSign, MapPin, Award, CheckCircle, ArrowRight, RefreshCw } from 'lucide-react';
 import { jobService } from '../services/api';
 
-function Home({ addAppliedJob, showToast }) {
+function Home({ user, addAppliedJob, showToast }) {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
@@ -346,9 +346,11 @@ function Home({ addAppliedJob, showToast }) {
       {/* Apply Modal */}
       {applyingJob && (
         <ApplyModal
+          user={user}
           job={applyingJob}
           onClose={() => setApplyingJob(null)}
           onSubmitSuccess={handleApplySuccess}
+          showToast={showToast}
         />
       )}
 

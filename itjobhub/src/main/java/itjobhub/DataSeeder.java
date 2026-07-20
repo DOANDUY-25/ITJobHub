@@ -19,10 +19,35 @@ public class DataSeeder implements CommandLineRunner {
     private final CompanyRepository companyRepository;
     private final JobRepository jobRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CandidateRepository candidateRepository;
 
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        // Seed candidate if not exists
+        if (userRepository.findByEmail("candidate@itjobhub.com").isEmpty()) {
+            User uCandidate = User.builder()
+                    .email("candidate@itjobhub.com")
+                    .password(passwordEncoder.encode("12345678"))
+                    .authProvider(AuthProvider.LOCAL)
+                    .role(Role.CANDIDATE)
+                    .accountStatus(AccountStatus.ACTIVE)
+                    .phone("0912345678")
+                    .build();
+            uCandidate = userRepository.save(uCandidate);
+
+            Candidate candidate = Candidate.builder()
+                    .user(uCandidate)
+                    .fullName("Nguyen Van Candidate")
+                    .bio("Experienced Software Engineer specializing in full stack applications.")
+                    .skills("Java, Spring Boot, React, JavaScript, MySQL")
+                    .experience("3 years")
+                    .education("Bachelor of Computer Science")
+                    .preferredLocation("Ha Noi")
+                    .build();
+            candidateRepository.save(candidate);
+        }
+
         if (jobRepository.count() > 0) {
             return;
         }

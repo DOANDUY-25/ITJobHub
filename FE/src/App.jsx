@@ -79,6 +79,7 @@ function App() {
             path="/" 
             element={
               <Home 
+                user={user}
                 addAppliedJob={addAppliedJob} 
                 showToast={showToast} 
               />

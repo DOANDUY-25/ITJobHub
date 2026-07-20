@@ -75,4 +75,17 @@ export const jobService = {
   getJobDetails: async (id) => (await api.get(`/jobs/${id}`)).data,
 };
 
+// ===================== Application Service =====================
+export const applicationService = {
+  applyJob: async (formData) => {
+    return (await api.post('/applications', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    })).data;
+  },
+  getMyApplications: async () => (await api.get('/applications/my')).data,
+  getEmployerApplications: async () => (await api.get('/applications/employer')).data,
+};
+
 export default api;
