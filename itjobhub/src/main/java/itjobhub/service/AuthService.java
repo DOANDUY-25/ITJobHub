@@ -184,6 +184,7 @@ public class AuthService {
                 .email(user.getEmail())
                 .fullName(fullName)
                 .role(user.getRole().name())
+                .authProvider(user.getAuthProvider() != null ? user.getAuthProvider().name() : null)
                 .build();
     }
 }

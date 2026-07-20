@@ -57,33 +57,42 @@ function AuthPage({ onLogin, showToast }) {
     }
   }, [onLogin, navigate, showToast]);
 
-  // Load Google Identity Services script
+  // Load Google Identity Services script — chỉ khởi tạo 1 lần duy nhất
   useEffect(() => {
     const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
     if (!clientId) return;
 
-    const script = document.createElement('script');
-    script.src = 'https://accounts.google.com/gsi/client';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-
-    script.onload = () => {
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: clientId,
-          callback: handleGoogleCallback,
-          ux_mode: 'popup',
-        });
+    const initGoogle = () => {
+      if (!window.google) return;
+      // Cập nhật callback (không gọi initialize lại nếu đã init)
+      if (window._gsiInitialized) {
         setGoogleReady(true);
+        return;
       }
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleGoogleCallback,
+        ux_mode: 'popup',
+      });
+      window._gsiInitialized = true;
+      setGoogleReady(true);
     };
 
-    return () => {
-      if (document.head.contains(script)) {
-        document.head.removeChild(script);
-      }
-    };
+    // Nếu script đã load sẵn (HMR reload), dùng luôn
+    if (window.google) {
+      initGoogle();
+      return;
+    }
+
+    // Chỉ append script nếu chưa có
+    if (!document.querySelector('script[src*="accounts.google.com/gsi/client"]')) {
+      const script = document.createElement('script');
+      script.src = 'https://accounts.google.com/gsi/client';
+      script.async = true;
+      script.defer = true;
+      script.onload = initGoogle;
+      document.head.appendChild(script);
+    }
   }, [handleGoogleCallback]);
 
   // Render Google button when the view changes or Google SDK becomes ready

@@ -31,8 +31,8 @@ public class Candidate {
     @Column(columnDefinition = "TEXT")
     private String bio;
 
-    @Column(columnDefinition = "JSON")
-    private String skills; // lưu JSON string, parse ở service layer
+    @Column(columnDefinition = "TEXT")
+    private String skills; // lưu comma-separated string, vd: "React, Java, Spring Boot"
 
     @Column(length = 100)
     private String experience;

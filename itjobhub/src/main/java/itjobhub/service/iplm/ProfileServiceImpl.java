@@ -91,8 +91,10 @@ public class ProfileServiceImpl implements ProfileService {
         if (user.getRole() == Role.CANDIDATE) {
             Candidate candidate = candidateRepository.findByCandidateId(userId).orElse(null);
             if (candidate == null) {
+                // QUAN TRONG: Khong set candidateId thu cong.
+                // @MapsId tu dong map candidateId = user.userId khi persist.
+                // Neu set thu cong -> candidateId != null -> isNew()=false -> merge() -> conflict!
                 candidate = Candidate.builder()
-                        .candidateId(userId)
                         .user(user)
                         .fullName(request.getFullName() != null ? request.getFullName() : "Candidate " + userId)
                         .build();
@@ -104,13 +106,13 @@ public class ProfileServiceImpl implements ProfileService {
             if (request.getExperience() != null) candidate.setExperience(request.getExperience());
             if (request.getEducation() != null) candidate.setEducation(request.getEducation());
             if (request.getPreferredLocation() != null) candidate.setPreferredLocation(request.getPreferredLocation());
-
             candidateRepository.save(candidate);
+
         } else if (user.getRole() == Role.EMPLOYER) {
             Company company = companyRepository.findByCompanyId(userId).orElse(null);
             if (company == null) {
+                // Tuong tu: khong set companyId thu cong, de @MapsId xu ly
                 company = Company.builder()
-                        .companyId(userId)
                         .user(user)
                         .companyName(request.getCompanyName() != null ? request.getCompanyName() : "Company " + userId)
                         .profileStatus(Company.ProfileStatus.PENDING)
@@ -122,7 +124,6 @@ public class ProfileServiceImpl implements ProfileService {
             if (request.getIndustry() != null) company.setIndustry(request.getIndustry());
             if (request.getSize() != null) company.setSize(request.getSize());
             if (request.getDescription() != null) company.setDescription(request.getDescription());
-
             companyRepository.save(company);
         }
 

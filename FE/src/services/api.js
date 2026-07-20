@@ -1,70 +1,65 @@
 import axios from 'axios';
 
-// The Spring Boot backend runs on localhost:9999 with context path /api.
-// Adjust base URL if needed.
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:9999/api/v1/auth';
+const BASE = import.meta.env.VITE_BASE_URL || 'http://localhost:9999/api/v1';
 
-const api = axios.create({
-  baseURL: API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
+// Instance dành cho /api/v1/auth/**
+const authApi = axios.create({
+  baseURL: `${BASE}/auth`,
+  headers: { 'Content-Type': 'application/json' },
 });
 
-// Request interceptor to attach JWT token if available
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
+// Instance dành cho /api/v1/** (users/profile, ...)
+const api = axios.create({
+  baseURL: BASE,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+// Gắn JWT Bearer token vào cả 2 instances
+const attachToken = (config) => {
+  const token = localStorage.getItem('token');
+  if (token) config.headers['Authorization'] = `Bearer ${token}`;
+  return config;
+};
+authApi.interceptors.request.use(attachToken, (e) => Promise.reject(e));
+api.interceptors.request.use(attachToken, (e) => Promise.reject(e));
+
+// 401 = token hết hạn → hiển thị thông báo rồi redirect sau 1.5s
+// 403 = không đủ quyền → để component tự xử lý, KHÔNG logout
+const handleAuthError = (error) => {
+  if (error.response?.status === 401 && localStorage.getItem('token')) {
+    console.warn('[API] Phiên đăng nhập hết hạn.');
+    localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
+    // Delay nhỏ để các toast error kịp hiển thị trước khi redirect
+    setTimeout(() => { window.location.href = '/auth'; }, 1500);
   }
-);
+  return Promise.reject(error);
+};
+authApi.interceptors.response.use((r) => r, handleAuthError);
+api.interceptors.response.use((r) => r, handleAuthError);
 
+// ===================== Auth Service =====================
 export const authService = {
-  register: async (registerData) => {
-    // registerData: { email, password, fullName, role }
-    const response = await api.post('/register', registerData);
-    return response.data;
-  },
+  register: async (data) => (await authApi.post('/register', data)).data,
+  verifyOtp: async (data) => (await authApi.post('/verify-otp', data)).data,
+  resendOtp: async (email) => (await authApi.post('/resend-otp', { email })).data,
+  login: async (data) => (await authApi.post('/login', data)).data,
+  loginWithGoogle: async (idToken) => (await authApi.post('/login/google', { idToken })).data,
+  forgotPassword: async (email) => (await authApi.post('/forgot-password', { email })).data,
+  resetPassword: async (data) => (await authApi.post('/reset-password', data)).data,
+};
 
-  verifyOtp: async (verifyData) => {
-    // Backend expects: { email, otpCode }
-    const response = await api.post('/verify-otp', verifyData);
-    return response.data; // Returns AuthResponse: { accessToken, refreshToken, tokenType, userId, email, fullName, role }
-  },
+// ===================== Profile Service =====================
+export const profileService = {
+  // GET  /api/v1/users/profile
+  getProfile: async () => (await api.get('/users/profile')).data,
 
-  resendOtp: async (email) => {
-    const response = await api.post('/resend-otp', { email });
-    return response.data;
-  },
+  // PUT  /api/v1/users/profile
+  updateProfile: async (data) => (await api.put('/users/profile', data)).data,
 
-  login: async (loginData) => {
-    // loginData: { email, password }
-    const response = await api.post('/login', loginData);
-    return response.data; // Returns AuthResponse: { accessToken, refreshToken, tokenType, userId, email, fullName, role }
-  },
-
-  loginWithGoogle: async (idToken) => {
-    // Backend expects: { idToken }
-    const response = await api.post('/login/google', { idToken });
-    return response.data;
-  },
-
-  forgotPassword: async (email) => {
-    const response = await api.post('/forgot-password', { email });
-    return response.data;
-  },
-
-  resetPassword: async (resetData) => {
-    // Backend expects: { email, otpCode, newPassword }
-    const response = await api.post('/reset-password', resetData);
-    return response.data;
-  },
+  // PUT  /api/v1/auth/change-password
+  changePassword: async (data) => (await authApi.put('/change-password', data)).data,
 };
 
 export default api;
