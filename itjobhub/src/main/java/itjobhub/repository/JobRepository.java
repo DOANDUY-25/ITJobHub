@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,4 +40,17 @@ public interface JobRepository extends JpaRepository<Job, Long> {
 
     @Query("SELECT j FROM Job j JOIN FETCH j.company c WHERE c.companyId = :companyId ORDER BY j.createdAt DESC")
     List<Job> findByCompanyId(@Param("companyId") Long companyId);
+
+    // Admin queries
+    @Query("SELECT j FROM Job j JOIN FETCH j.company c ORDER BY j.createdAt DESC")
+    List<Job> findAllWithCompany();
+
+    @Query("SELECT j FROM Job j JOIN FETCH j.company c WHERE j.status = :status ORDER BY j.createdAt DESC")
+    List<Job> findAllByStatus(@Param("status") JobStatus status);
+
+    long countByStatus(JobStatus status);
+
+    @Query("SELECT COUNT(j) FROM Job j WHERE j.createdAt >= :start AND j.createdAt < :end")
+    long countNewJobsInPeriod(@Param("start") LocalDateTime start, @Param("end") LocalDateTime end);
 }
+
