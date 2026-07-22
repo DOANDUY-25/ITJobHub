@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { Briefcase, User, LogOut, LogIn, Menu, X, Bell } from 'lucide-react';
+import { Briefcase, User, LogOut, LogIn, Menu, X, Bell, Shield } from 'lucide-react';
 
 function Navbar({ user, onLogout }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -74,6 +74,16 @@ function Navbar({ user, onLogout }) {
               color: isActive('/dashboard') ? 'var(--primary)' : 'var(--text-secondary)'
             }}>
               Dashboard
+            </Link>
+          )}
+          {user && user.role === 'ADMIN' && (
+            <Link to="/admin" style={{
+              fontSize: '0.925rem',
+              fontWeight: 600,
+              color: isActive('/admin') ? '#8b5cf6' : '#6366f1',
+              display: 'flex', alignItems: 'center', gap: 5,
+            }}>
+              <Shield size={15} /> Admin
             </Link>
           )}
         </div>

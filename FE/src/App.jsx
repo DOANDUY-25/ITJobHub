@@ -5,6 +5,7 @@ import Footer from './components/Footer';
 import Home from './pages/Home';
 import AuthPage from './pages/AuthPage';
 import Dashboard from './pages/Dashboard';
+import AdminPortal from './pages/AdminPortal';
 import './App.css';
 
 function App() {
@@ -107,6 +108,18 @@ function App() {
                   appliedJobs={appliedJobs} 
                   showToast={showToast} 
                 />
+              ) : (
+                <Navigate to="/auth" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/admin" 
+            element={
+              user && user.role === 'ADMIN' ? (
+                <AdminPortal user={user} showToast={showToast} />
+              ) : user ? (
+                <Navigate to="/" replace />
               ) : (
                 <Navigate to="/auth" replace />
               )
